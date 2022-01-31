@@ -1,17 +1,14 @@
 set nocompatible
 set visualbell
-
-" Intuitive backspacing in insert mode
 set backspace=indent,eol,start
-
-" File-type highlighting and configuration.
-" Run :filetype (without args) to see what you may have
-" to turn on yourself, or just set them all to be sure.
 syntax on
 filetype on
 filetype plugin on
 filetype indent on
  
+filetype plugin indent on
+
+
 
 set hlsearch
 set incsearch          " ...dynamically as they are typed.
@@ -60,10 +57,33 @@ Plug 'nsf/gocode', { 'tag': 'v.20150303', 'rtp': 'vim' }
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
 Plug 'preservim/nerdtree'
 Plug 'morhetz/gruvbox'
-
 Plug 'vim-scripts/AutoComplPop'
+Plug 'dense-analysis/ale'
+Plug 'rust-lang/rust.vim'
+
 call plug#end()
 
+syntax enable
+filetype plugin indent on
+
+autocmd BufNewFile,BufRead *.rs set filetype=rust
+
+call plug#begin()
+Plug 'dense-analysis/ale'
+Plug 'rust-lang/rust.vim'
+call plug#end()
+
+let g:ale_linters = {
+\  'rust': ['analyzer'],
+\}
+
+let g:ale_fixers = { 'rust': ['rustfmt', 'trim_whitespace', 'remove_trailing_lines'] }
+
+" Optional, configure as-you-type completions
+set completeopt=menu,menuone,preview,noselect,noinsert
+let g:ale_completion_enabled = 1
+
+nnoremap <C-LeftMouse> :ALEGoToDefinition<CR>
 
 
 
