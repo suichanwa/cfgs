@@ -5,11 +5,9 @@ syntax on
 filetype on
 filetype plugin on
 filetype indent on
- 
+
+
 filetype plugin indent on
-
-
-
 set hlsearch
 set incsearch          " ...dynamically as they are typed.
 set showmode           " always show what mode we're currently editing in
@@ -24,18 +22,15 @@ set number             " always show line numbers
 set showmatch          " set show matching parenthesis
 set ignorecase         " ignore case when searching
 set smartcase          " ignore case if search pattern is all lowercase,
-                       " case-sensitive otherwise
+
 set smarttab           " insert tabs on the start of a line according to
 
 set scrolloff=4        " keep 4 lines off the edges of the screen when scrolling
 
-" Specify a directory for plugins
-" - For Neovim: stdpath('data') . '/plugged'
-" - Avoid using standard Vim directory names like 'plugin'
 call plug#begin('~/.vim/plugged')
 
 Plug 'junegunn/vim-easy-align'
-
+Plug 'morhetz/gruvbox'
 " Any valid git URL is allowed
 Plug 'https://github.com/junegunn/vim-github-dashboard.git'
 
@@ -60,18 +55,29 @@ Plug 'morhetz/gruvbox'
 Plug 'vim-scripts/AutoComplPop'
 Plug 'dense-analysis/ale'
 Plug 'rust-lang/rust.vim'
-
+Plug 'dense-analysis/ale'
+Plug 'rust-lang/rust.vim'
+Plug 'Raimondi/delimitMate'
+Plug 'christoomey/vim-system-copy'
+Plug 'vim-airline/vim-airline'
 call plug#end()
 
+"syscopy
+let g:system_copy#copy_command='xclip -sel clipboard'
+let g:system_copy_silent = 1
+let g:system_copy#paste_command='xclip -sel clipboard -o'
+nnoremap <C-y> "+y
+vnoremap <C-y> "+y
+nnoremap <C-p> "+gP
+vnoremap <C-p> "+gP
+
+
+"syscopy
 syntax enable
 filetype plugin indent on
 
 autocmd BufNewFile,BufRead *.rs set filetype=rust
 
-call plug#begin()
-Plug 'dense-analysis/ale'
-Plug 'rust-lang/rust.vim'
-call plug#end()
 
 let g:ale_linters = {
 \  'rust': ['analyzer'],
@@ -89,4 +95,6 @@ nnoremap <C-LeftMouse> :ALEGoToDefinition<CR>
 
 
 
+colorscheme gruvbox
+set background=dark
 
