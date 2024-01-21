@@ -201,5 +201,6 @@ default_border pixel 1
 for_window [class="^.*"] border pixel 1
 exec_always setxkbmap -layout us,ru
 exec_always setxkbmap -option 'grp:win_space_toggle'
-exec_always xrandr --output VGA-1 --auto --output VGA-1-1 --auto --right-of VGA-1
+exec_always xrandr --newmode "2880x1800_120.00"  934.00  2880 3136 3456 4032  1800 1803 1809 1931 -hsync +vsync
+exec_always xrandr --addmode eDP "2880x1800_120.00"
 bindsym Print       exec flameshot gui
