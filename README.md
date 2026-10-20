@@ -2,6 +2,8 @@
 
 Personal configuration dotfiles.
 
+![Desktop Preview](assets/screenshot.png)
+
 ### Modern SwayFX Desktop Setup
 - **Window Manager**: `sway/` (SwayFX with frosted blur, custom shadows, and dual-monitor support)
 - **Bar**: `waybar/` (Frosted slate status bar with grouped hardware, audio, and system capsules)
