@@ -1,0 +1,57 @@
+#!/bin/bash
+# Power profile selector and cycler for Sway / Wayland
+
+get_active() {
+    busctl get-property net.hadess.PowerProfiles /net/hadess/PowerProfiles net.hadess.PowerProfiles ActiveProfile 2>/dev/null | awk -F'"' '{print $2}'
+}
+
+set_profile() {
+    busctl set-property net.hadess.PowerProfiles /net/hadess/PowerProfiles net.hadess.PowerProfiles ActiveProfile s "$1"
+}
+
+CURRENT=$(get_active)
+[ -z "$CURRENT" ] && CURRENT="balanced"
+
+# Quick cycle mode (e.g. on right-click or keybinding)
+if [ "$1" = "--cycle" ]; then
+    case "$CURRENT" in
+        power-saver) NEXT="balanced" ;;
+        balanced)    NEXT="performance" ;;
+        performance) NEXT="power-saver" ;;
+        *)           NEXT="balanced" ;;
+    esac
+    set_profile "$NEXT"
+    exit 0
+fi
+
+# Interactive menu via wofi
+MENU=""
+if [ "$CURRENT" = "power-saver" ]; then
+    MENU+="󰌪  Power Saver (Quiet & Maximum Battery)   ✓\n"
+else
+    MENU+="󰌪  Power Saver (Quiet & Maximum Battery)\n"
+fi
+
+if [ "$CURRENT" = "balanced" ]; then
+    MENU+="󰾆  Balanced (Recommended Default)         ✓\n"
+else
+    MENU+="󰾆  Balanced (Recommended Default)\n"
+fi
+
+if [ "$CURRENT" = "performance" ]; then
+    MENU+="󰓅  Performance (Maximum CPU Clocks)       ✓\n"
+else
+    MENU+="󰓅  Performance (Maximum CPU Clocks)\n"
+fi
+
+CHOSEN=$(printf "%b" "$MENU" | wofi --dmenu --style "$HOME/.config/wofi/style.css" --prompt "Power Profile:" --width 420 --lines 3 --gtk-dark --hide-scroll --insensitive)
+
+[ -z "$CHOSEN" ] && exit 0
+
+if echo "$CHOSEN" | grep -qi "Power Saver"; then
+    set_profile "power-saver"
+elif echo "$CHOSEN" | grep -qi "Balanced"; then
+    set_profile "balanced"
+elif echo "$CHOSEN" | grep -qi "Performance"; then
+    set_profile "performance"
+fi

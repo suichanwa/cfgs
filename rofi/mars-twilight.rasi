@@ -1,0 +1,158 @@
+* {
+    font: "JetBrainsMono Nerd Font Propo 13.5";
+    bg: rgba(16, 18, 22, 0.90);
+    bg-alt: rgba(255, 255, 255, 0.04);
+    border-col: rgba(255, 255, 255, 0.09);
+    accent: #e2e8f0;
+    fg: #f1f5f9;
+    fg-muted: #94a3b8;
+    selected-bg: rgba(255, 255, 255, 0.08);
+    selected-border: rgba(255, 255, 255, 0.16);
+    urgent: #e06c75;
+
+    background-color: transparent;
+    text-color: @fg;
+    margin: 0px;
+    padding: 0px;
+    spacing: 0px;
+}
+
+window {
+    location: center;
+    anchor: center;
+    width: 820px;
+    border: 1px solid;
+    border-color: @border-col;
+    border-radius: 18px;
+    background-color: @bg;
+    /* Extra bottom padding ensures mode buttons never get clipped */
+    padding: 20px 20px 26px 20px;
+}
+
+mainbox {
+    spacing: 14px;
+    children: [ inputbar, message, listview, mode-switcher ];
+}
+
+inputbar {
+    spacing: 12px;
+    padding: 12px 18px;
+    background-color: @bg-alt;
+    border: 1px solid;
+    border-color: @border-col;
+    border-radius: 14px;
+    children: [ prompt, entry ];
+}
+
+prompt {
+    text-color: @accent;
+    font: "JetBrainsMono Nerd Font Propo Semi-Bold 13.5";
+    vertical-align: 0.5;
+}
+
+entry {
+    font: "JetBrainsMono Nerd Font Propo 13.5";
+    placeholder: "Search applications, open windows, or commands...";
+    placeholder-color: #64748b;
+    text-color: @fg;
+    vertical-align: 0.5;
+    cursor: text;
+}
+
+message {
+    padding: 8px 12px;
+    border-radius: 10px;
+    background-color: @bg-alt;
+}
+
+textbox {
+    text-color: @fg-muted;
+}
+
+listview {
+    lines: 7;
+    columns: 1;
+    fixed-height: false;
+    spacing: 5px;
+    scrollbar: false;
+}
+
+element {
+    padding: 10px 14px;
+    border-radius: 12px;
+    spacing: 14px;
+    text-color: @fg-muted;
+    cursor: pointer;
+}
+
+element normal.normal {
+    background-color: transparent;
+    text-color: @fg-muted;
+}
+
+element alternate.normal {
+    background-color: transparent;
+    text-color: @fg-muted;
+}
+
+element selected.normal {
+    background-color: @selected-bg;
+    border: 1px solid;
+    border-color: @selected-border;
+    text-color: #ffffff;
+}
+
+element normal.active {
+    background-color: transparent;
+    text-color: @accent;
+}
+
+element alternate.active {
+    background-color: transparent;
+    text-color: @accent;
+}
+
+element selected.active {
+    background-color: @selected-bg;
+    border: 1px solid;
+    border-color: @selected-border;
+    text-color: #ffffff;
+}
+
+element-icon {
+    size: 28px;
+    background-color: transparent;
+    vertical-align: 0.5;
+    cursor: inherit;
+}
+
+element-text {
+    vertical-align: 0.5;
+    text-color: inherit;
+    font: inherit;
+    cursor: inherit;
+}
+
+mode-switcher {
+    spacing: 12px;
+    margin: 6px 0px 0px 0px;
+}
+
+button {
+    padding: 10px 20px;
+    border-radius: 12px;
+    background-color: @bg-alt;
+    border: 1px solid;
+    border-color: rgba(255, 255, 255, 0.07);
+    text-color: @fg-muted;
+    font: "JetBrainsMono Nerd Font Propo Medium 12.5";
+    cursor: pointer;
+}
+
+button selected {
+    background-color: rgba(255, 255, 255, 0.12);
+    border: 1px solid;
+    border-color: rgba(255, 255, 255, 0.24);
+    text-color: #ffffff;
+    font: "JetBrainsMono Nerd Font Propo Semi-Bold 12.5";
+}

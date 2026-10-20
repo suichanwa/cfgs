@@ -1,0 +1,117 @@
+{
+    "layer": "top",
+    "position": "top",
+    "height": 32,
+    "spacing": 0,
+    "modules-left": [
+        "sway/workspaces",
+        "sway/mode"
+    ],
+    "modules-right": [
+        "group/hardware",
+        "group/audio",
+        "group/system"
+    ],
+    "group/hardware": {
+        "orientation": "horizontal",
+        "modules": [
+            "cpu",
+            "custom/gpu",
+            "memory",
+            "memory#swap",
+            "disk"
+        ]
+    },
+    "group/audio": {
+        "orientation": "horizontal",
+        "modules": [
+            "pulseaudio"
+        ]
+    },
+    "group/system": {
+        "orientation": "horizontal",
+        "modules": [
+            "battery",
+            "tray"
+        ]
+    },
+    "sway/workspaces": {
+        "disable-scroll": true,
+        "all-outputs": false,
+        "format": "{icon}",
+        "format-icons": {
+            "1": "一", "2": "二", "3": "三", "4": "四", "5": "五",
+            "6": "六", "7": "七", "8": "八", "9": "九", "10": "十",
+            "11": "一", "12": "二", "13": "三", "14": "四", "15": "五",
+            "16": "六", "17": "七", "18": "八", "19": "九", "20": "十"
+        }
+    },
+    "sway/mode": {
+        "format": "<span color='#f59e0b'>󰩨</span> <span color='#fef08a'>{}</span>",
+        "tooltip": false
+    },
+    "cpu": {
+        "format": "<span color='#67e8f9'></span> <span color='#dbe8ed'>{usage:2}%</span>",
+        "interval": 2,
+        "on-click": "foot -e btop",
+        "tooltip": false
+    },
+    "custom/gpu": {
+        "exec": "cat /sys/class/drm/card1/device/gpu_busy_percent 2>/dev/null || echo 0",
+        "format": "<span color='#818cf8'>󰢮</span> <span color='#dbe8ed'>{:2}%</span>",
+        "interval": 2,
+        "tooltip": false
+    },
+    "memory": {
+        "format": "<span color='#38bdf8'></span> <span color='#dbe8ed'>{used:0.1f}G</span>",
+        "tooltip-format": "RAM: {used:0.2f}GiB / {total:0.2f}GiB ({percentage}%)",
+        "interval": 2,
+        "on-click": "foot -e btop"
+    },
+    "memory#swap": {
+        "format": "<span color='#94a3b8'>󰾴</span> <span color='#b0c4cc'>{swapUsed:0.1f}G</span>",
+        "tooltip-format": "Swap: {swapUsed:0.2f}GiB / {swapTotal:0.2f}GiB ({swapPercentage}%)",
+        "interval": 2,
+        "on-click": "foot -e btop"
+    },
+    "disk": {
+        "interval": 30,
+        "format": "<span color='#2dd4bf'>󰋊</span> <span color='#dbe8ed'>{free}</span>",
+        "path": "/",
+        "tooltip-format": "Free: {free} ({percentage_free}%)\nUsed: {used} / Total: {total}",
+        "on-click": "foot -e btop"
+    },
+    "pulseaudio": {
+        "format": "<span color='#fb923c'>{icon}</span> <span color='#dbe8ed'>{volume:2}%</span>",
+        "format-muted": "<span color='#f87171'>󰝟</span> <span color='#fca5a5'>Muted</span>",
+        "format-icons": {
+            "default": ["󰕿", "󰖀", "󰕾"]
+        },
+        "on-click": "pavucontrol",
+        "on-click-right": "~/.local/bin/toggle-audio-sink",
+        "on-scroll-up": "pamixer -i 5",
+        "on-scroll-down": "pamixer -d 5"
+    },
+    "sway/language": {
+        "format": "<span color='#a78bfa'>󰌌</span> <span color='#dbe8ed'>{short}</span>",
+        "tooltip-format": "{long}",
+        "on-click": "swaymsg input type:keyboard xkb_switch_layout next"
+    },
+    "battery": {
+        "bat": "BAT0",
+        "states": {
+            "warning": 25,
+            "critical": 10
+        },
+        "format": "<span color='#f59e0b'>{icon}</span> <span color='#dbe8ed'>{capacity:2}%</span>",
+        "format-charging": "<span color='#34d399'>󰂄</span> <span color='#dbe8ed'>{capacity:2}%</span>",
+        "format-plugged": "<span color='#34d399'>󰂄</span> <span color='#dbe8ed'>{capacity:2}%</span>",
+        "format-icons": ["󰂎", "󰁺", "󰁼", "󰁾", "󰂀", "󰂂", "󰁹"],
+        "on-click": "~/.local/bin/power-menu",
+        "on-click-right": "~/.local/bin/power-menu --cycle"
+    },
+    "tray": {
+        "icon-size": 15,
+        "spacing": 8
+    }
+}

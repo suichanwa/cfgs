@@ -1,0 +1,29 @@
+# Yazi Dimmed Frosted Slate Theme
+
+[mgr]
+border_symbol = "│"
+border_style  = { fg = "#3b4758" }
+
+[which]
+border = { fg = "#3b4758" }
+
+[confirm]
+border = { fg = "#3b4758" }
+
+[input]
+border = { fg = "#3b4758" }
+
+[help]
+border = { fg = "#3b4758" }
+
+[tasks]
+border = { fg = "#3b4758" }
+
+[spot]
+border = { fg = "#3b4758" }
+
+[pick]
+border = { fg = "#3b4758" }
+
+[cmp]
+border = { fg = "#3b4758" }

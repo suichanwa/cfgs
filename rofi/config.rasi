@@ -1,0 +1,16 @@
+configuration {
+    modi: "drun,window,run";
+    show-icons: true;
+    icon-theme: "breeze-dark";
+    drun-use-desktop-cache: true;
+    drun-reload-desktop-cache: false;
+    display-drun: "󰀻  Apps";
+    display-window: "󱂬  Windows";
+    display-run: "󰞷  Run";
+    drun-display-format: "{name}";
+    window-format: "{t}";
+    font: "JetBrainsMono Nerd Font Propo 13.5";
+    terminal: "foot";
+}
+
+@theme "mars-twilight"

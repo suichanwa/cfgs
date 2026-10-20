@@ -1,0 +1,49 @@
+/* SwayOSD Modern Minimal Dark Frosted Theme */
+
+window#osd {
+    background: rgba(16, 18, 22, 0.90);
+    border: 1px solid rgba(255, 255, 255, 0.10);
+    border-radius: 16px;
+    padding: 12px;
+}
+
+#container {
+    margin: 8px 12px;
+}
+
+progressbar:disabled,
+image:disabled {
+    opacity: 0.5;
+}
+
+progressbar {
+    min-height: 6px;
+    border-radius: 999px;
+    background: transparent;
+    border: none;
+}
+
+trough {
+    min-height: 6px;
+    border-radius: 999px;
+    border: none;
+    background: rgba(255, 255, 255, 0.12);
+}
+
+progress {
+    min-height: 6px;
+    border-radius: 999px;
+    border: none;
+    background: #e2e8f0;
+}
+
+label {
+    color: #f8fafc;
+    font-family: "JetBrainsMono Nerd Font", sans-serif;
+    font-size: 13px;
+    font-weight: 600;
+}
+
+image {
+    color: #e2e8f0;
+}

@@ -1,45 +1,12 @@
 # Default config for sway
 #
 # Copy this to ~/.config/sway/config and edit it to your liking.
-# class                         border          background      text
-# indicator       child_border
-client.focused                  #ffff33         #000000         #ffff33
-# $coloratt       #000000
- client.focused_inactive         #333333         #000000         #ffff33
-# $coloratt       #000000
-client.unfocused                #333333         #000000         #888888
-# $coloratt       #000000
-# client.urgent                      #2f343a         #900000         #ffffff
-# $coloratt       #900000
-# client.placeholder              #000000         #000000         #ffffff  $coloratt       #0c0c0c
+#
+# Read `man 5 sway` for a complete reference.
 
-bindsym Mod1+n exec ( ( ps axo comm= | grep -w waybar > /dev/null ) && pkill waybar ) || waybar -b bar-0 
-
-default_border pixel 1
-
-for_window [tiling] border pixel 1
-smart_borders on
-
-input type:keyboard {
-    xkb_layout us,ru
-    xkb_options grp:win_space_toggle,compose:caps
-}
-
-input * xkb_numlock enab
-#gaps and hueta
-default_border pixel
-
-bindsym Mod1+g mode "Gaps"
-
-mode "Gaps" {
-  bindsym Mod1+l gaps inner all plus 3
-  bindsym Mod1+h gaps inner all minus 3
-  bindsym Mod1+j gaps outer all plus 3
-  bindsym Mod1+k gaps outer all minus 3
-  bindsym Mod1+b mode "default"
-}
-
-
+### Variables
+#
+# Logo key. Use Mod1 for Alt.
 set $mod Mod1
 # Home row direction keys, like vim
 set $left h
@@ -47,16 +14,171 @@ set $down j
 set $up k
 set $right l
 # Your preferred terminal emulator
-set $term alacritty
-# Your preferred application launcher
-# Note: pass the final command to swaymsg so that the resulting window can be opened
-# on the original workspace that the command was run on.
+set $term foot
+# Your preferred application launcher (smart launcher: blinks workspace if app already open)
+set $menu ~/.local/bin/sway-launcher
+
+
+# Window borders and gaps (Floating Cards Aesthetic)
+default_border pixel 1
+default_floating_border pixel 1
+gaps inner 8
+gaps outer 6
+smart_gaps on
+smart_borders on
+hide_edge_borders none
+
+# Font & Titlebars
+font pango:JetBrainsMono Nerd Font 9.5
+titlebar_padding 3 6
+
+# Window and tab colors (Dim, subtle slate focus outline)
+# class                  border    bground   text      indicator  child_border
+client.focused           #3b4758   #0f172a   #f8fafc   #3b4758    #3b4758
+client.focused_inactive  #181f28   #0f141d   #94a3b8   #181f28    #181f28
+client.unfocused         #181f28   #0a0e14   #64748b   #181f28    #181f28
+client.urgent            #ef4444   #991b1b   #ffffff   #ef4444    #ef4444
+
+# SwayFX: Clean tiling effects (Frosted blur enabled for translucent windows)
+corner_radius 0
+blur enable
+blur_xray disable
+blur_passes 2
+blur_radius 5
+blur_noise 0.02
+for_window [app_id="^foot$"] blur enable
+shadows disable
+shadow_blur_radius 12
+shadow_color #00000060
+shadow_inactive_color #00000000
+shadow_offset 0 0
+shadows_on_csd disable
+
+# SwayFX Layer Effects (frosted blur and corners for modern overlays)
+layer_effects "swaync-control-center" {
+    blur enable;
+    blur_ignore_transparent enable;
+    shadows enable;
+    corner_radius 12;
+}
+layer_effects "swaync-notification-window" {
+    blur enable;
+    blur_ignore_transparent enable;
+    shadows enable;
+    corner_radius 10;
+}
+layer_effects "swayosd" {
+    blur enable;
+    shadows enable;
+    corner_radius 16;
+}
+layer_effects "vicinae" {
+    blur enable;
+    blur_ignore_transparent enable;
+    shadows enable;
+    corner_radius 16;
+}
+
+layer_effects "waybar" {
+    blur enable;
+    blur_ignore_transparent enable;
+}
+
+layer_effects "wofi" {
+    blur enable;
+    blur_ignore_transparent enable;
+    shadows enable;
+    corner_radius 16;
+}
+
+layer_effects "rofi" {
+    blur enable;
+    blur_ignore_transparent enable;
+    shadows enable;
+    corner_radius 16;
+}
+
+layer_effects "swayview" {
+    blur enable;
+    blur_ignore_transparent enable;
+    shadows enable;
+    corner_radius 16;
+}
+
+# Window rules for Vicinae Launcher
+for_window [app_id="(?i)vicinae.*"] floating enable, border none
+
+# Browsers: Clean flush display without server-side titlebars
+for_window [app_id="google-chrome"] border none
+for_window [class="(?i)google-chrome"] border none
+for_window [app_id="(?i)chrome.*"] border none
+for_window [app_id="(?i)helium.*"] border none
+
+# Android Emulator (Studio / AVD): Keep floating instead of tiling across the whole screen
+for_window [class="(?i)emulator"] floating enable
+for_window [title="(?i)android emulator.*"] floating enable
+for_window [app_id="(?i)emulator.*"] floating enable
+
+# Automatically surface dialogs and popups (prevents Wine & installers from hiding in the background)
+popup_during_fullscreen smart
+focus_on_window_activation smart
+
+for_window [window_type="dialog"] floating enable, move position center
+for_window [window_type="utility"] floating enable
+for_window [window_type="toolbar"] floating enable
+for_window [window_type="splash"] floating enable
+for_window [window_role="pop-up"] floating enable
+for_window [window_role="bubble"] floating enable
+for_window [window_role="task_dialog"] floating enable
+for_window [window_role="Preferences"] floating enable
+
+# Wine / Proton error, setup, and launcher dialogs
+for_window [class="(?i)wine"] focus
+for_window [app_id="(?i)jan"] focus
+for_window [class="(?i)explorer.exe"] floating enable
+for_window [class="(?i)steam" title="(?i)steam - news.*"] floating enable
+for_window [class="(?i)steam" title="(?i)friends list.*"] floating enable
+
+# Soft depth dimming: gently dims inactive windows (~8%) for subtle focus separation
+default_dim_inactive 0.08
+
+# System-wide dark theme for applications (GTK, Qt, Flatpak, Browsers, Electron)
+set $gnome-schema org.gnome.desktop.interface
+exec_always {
+    gsettings set $gnome-schema color-scheme 'prefer-dark'
+    gsettings set $gnome-schema gtk-theme 'Breeze-Dark'
+    gsettings set $gnome-schema icon-theme 'breeze-dark'
+}
+
+# D-Bus & Systemd environment import for screen sharing and dark themes
+exec systemctl --user import-environment WAYLAND_DISPLAY DISPLAY SWAYSOCK XDG_CURRENT_DESKTOP QT_QPA_PLATFORMTHEME QT_STYLE_OVERRIDE GTK_THEME
+exec hash dbus-update-activation-environment 2>/dev/null && \
+     dbus-update-activation-environment --systemd WAYLAND_DISPLAY DISPLAY SWAYSOCK XDG_CURRENT_DESKTOP=sway QT_QPA_PLATFORMTHEME=kde QT_STYLE_OVERRIDE=Breeze GTK_THEME=Breeze-Dark
 
 
 ### Output configuration
 #
-# Default wallpaper (more resolutions are available in /usr/share/backgrounds/sway/)
-output * bg "$HOME/Pictures/main-walpaper.*" fill
+# Disable duplicate USB-C video link (monitor is connected via HDMI for 100Hz)
+output DP-1 disable
+
+# Laptop built-in display at 120Hz (scaled 2x, positioned on the LEFT)
+output eDP-1 mode 2880x1800@120Hz position 0 0 scale 2
+
+# External 27" AOC Monitor via HDMI at 100Hz (positioned on the RIGHT)
+output HDMI-A-1 mode 2560x1440@100Hz position 1440 0
+
+# Ensure external monitor is marked primary in X11/Xwayland for full resolution gaming
+exec_always xrandr --output HDMI-A-1 --primary 2>/dev/null || true
+
+# Game window handling (Inhibit idle / screen blanking while gaming)
+for_window [class="(?i)(steam_app_10090|codwaw.*)"] inhibit_idle fullscreen
+for_window [title="(?i)dead air.*"] border none, inhibit_idle fullscreen
+for_window [class="(?i)(xrengine|xray).*"] border none, inhibit_idle fullscreen
+for_window [title="^DeadAir$"] border none, inhibit_idle fullscreen
+
+# Wallpaper configuration (managed via set-wallpaper)
+output * bg ~/.config/sway/wallpaper fill
+#
 # Example configuration:
 #
 #   output HDMI-A-1 resolution 1920x1080 position 1920,0
@@ -69,23 +191,49 @@ output * bg "$HOME/Pictures/main-walpaper.*" fill
 #
 # exec swayidle -w \
 #          timeout 300 'swaylock -f -c 000000' \
-#          timeout 600 'swaymsg "output * dpms off"' resume 'swaymsg "output * dpms on"' \
+#          timeout 600 'swaymsg "output * power off"' resume 'swaymsg "output * power on"' \
 #          before-sleep 'swaylock -f -c 000000'
 #
 # This will lock your screen after 300 seconds of inactivity, then turn off
 # your displays after another 300 seconds, and turn your screens back on when
 # resumed. It will also lock your screen before your computer goes to sleep.
+
+### Input configuration
+input type:pointer {
+    accel_profile flat
+    pointer_accel -0.2
+}
+
+input type:touchpad {
+    dwt enabled
+    tap enabled
+    natural_scroll enabled
+    middle_emulation enabled
+    scroll_factor 1.0
+}
+input type:keyboard {
+    xkb_layout "us,ru"
+}
+# You can also configure each device individually.
+# Read `man 5 sway-input` for more information about this section.
+
 ### Key bindings
 #
 # Basics:
 #
     # Start a terminal
     bindsym $mod+Return exec $term
-    bindsym $mod+Shift+Return exec kitty
+
     # Kill focused window
     bindsym $mod+Shift+q kill
 
-    # Start your launcher
+    # Switch keyboard layout between English and Russian (Win+Space)
+    bindsym Mod4+space input type:keyboard xkb_switch_layout next
+
+    # Launch Vicinae launcher (Alt+Space)
+    bindsym Mod1+space exec vicinae toggle
+
+    # Start secondary launcher (Wofi)
     bindsym $mod+d exec $menu
 
     # Drag floating windows by holding down $mod and left mouse button.
@@ -96,10 +244,14 @@ output * bg "$HOME/Pictures/main-walpaper.*" fill
     floating_modifier $mod normal
 
     # Reload the configuration file
-    bindsym $mod+Shift+r reload
+    bindsym $mod+Shift+c reload
 
     # Exit sway (logs you out of your Wayland session)
-    bindsym $mod+Shift+e exec swaynag -t warning -m 'You pressed the exit shortcut. Do you really want to exit sway? This will end your Wayland session.' -b 'Yes, exit sway' 'swaymsg exit'
+    bindsym $mod+Shift+e exec swaynag -t warning -m 'You pressed the exit shortcut. Do you really want to exit sway? This will end your Wayland session.' -B 'Yes, exit sway' 'swaymsg exit'
+
+    # Suspend / Sleep (Alt+Shift+S or hardware sleep key)
+    bindsym $mod+Shift+s exec systemctl suspend
+    bindsym --locked XF86Sleep exec systemctl suspend
 #
 # Moving around:
 #
@@ -124,40 +276,67 @@ output * bg "$HOME/Pictures/main-walpaper.*" fill
     bindsym $mod+Shift+Down move down
     bindsym $mod+Shift+Up move up
     bindsym $mod+Shift+Right move right
-#rofi
+#
+# Workspaces:
+#
+    # Switch to workspace on currently focused screen (1-10 per monitor)
+    bindsym $mod+1 exec ~/.local/bin/sway-workspace focus 1
+    bindsym $mod+2 exec ~/.local/bin/sway-workspace focus 2
+    bindsym $mod+3 exec ~/.local/bin/sway-workspace focus 3
+    bindsym $mod+4 exec ~/.local/bin/sway-workspace focus 4
+    bindsym $mod+5 exec ~/.local/bin/sway-workspace focus 5
+    bindsym $mod+6 exec ~/.local/bin/sway-workspace focus 6
+    bindsym $mod+7 exec ~/.local/bin/sway-workspace focus 7
+    bindsym $mod+8 exec ~/.local/bin/sway-workspace focus 8
+    bindsym $mod+9 exec ~/.local/bin/sway-workspace focus 9
+    bindsym $mod+0 exec ~/.local/bin/sway-workspace focus 10
 
-  set $menu "rofi -show drun -theme gruvbox-dark-soft"
+    # Switch back and forth between current and previous workspace (Alt+Tab & Win+Tab)
+    bindsym Mod1+Tab workspace back_and_forth
+    bindsym Mod1+Shift+Tab workspace back_and_forth
+    bindsym Mod4+Tab workspace back_and_forth
+    bindsym Mod4+Shift+Tab workspace back_and_forth
 
+    # Move focused container to workspace on currently focused screen
+    bindsym $mod+Shift+1 exec ~/.local/bin/sway-workspace move 1
+    bindsym $mod+Shift+2 exec ~/.local/bin/sway-workspace move 2
+    bindsym $mod+Shift+3 exec ~/.local/bin/sway-workspace move 3
+    bindsym $mod+Shift+4 exec ~/.local/bin/sway-workspace move 4
+    bindsym $mod+Shift+5 exec ~/.local/bin/sway-workspace move 5
+    bindsym $mod+Shift+6 exec ~/.local/bin/sway-workspace move 6
+    bindsym $mod+Shift+7 exec ~/.local/bin/sway-workspace move 7
+    bindsym $mod+Shift+8 exec ~/.local/bin/sway-workspace move 8
+    bindsym $mod+Shift+9 exec ~/.local/bin/sway-workspace move 9
+    bindsym $mod+Shift+0 exec ~/.local/bin/sway-workspace move 10
 
+# Bind workspace groups to outputs (2 displays)
+# External 27" AOC Monitor (HDMI-A-1: Workspaces 1-10)
+workspace 1 output HDMI-A-1 eDP-1
+workspace 2 output HDMI-A-1 eDP-1
+workspace 3 output HDMI-A-1 eDP-1
+workspace 4 output HDMI-A-1 eDP-1
+workspace 5 output HDMI-A-1 eDP-1
+workspace 6 output HDMI-A-1 eDP-1
+workspace 7 output HDMI-A-1 eDP-1
+workspace 8 output HDMI-A-1 eDP-1
+workspace 9 output HDMI-A-1 eDP-1
+workspace 10 output HDMI-A-1 eDP-1
 
-
-# Switch to workspace
-    bindsym $mod+1 workspace number 1 
-    bindsym $mod+2 workspace number 2
-    bindsym $mod+3 workspace number 3
-    bindsym $mod+4 workspace number 4
-    bindsym $mod+5 workspace number 5
-    bindsym $mod+6 workspace number 6
-    bindsym $mod+7 workspace number 7
-    bindsym $mod+8 workspace number 8
-    bindsym $mod+9 workspace number 9
-    bindsym $mod+0 workspace number 10
-    # Move focused container to workspace
-    bindsym $mod+Shift+1 move container to workspace number 1
-    bindsym $mod+Shift+2 move container to workspace number 2
-    bindsym $mod+Shift+3 move container to workspace number 3
-    bindsym $mod+Shift+4 move container to workspace number 4
-    bindsym $mod+Shift+5 move container to workspace number 5
-    bindsym $mod+Shift+6 move container to workspace number 6
-    bindsym $mod+Shift+7 move container to workspace number 7
-    bindsym $mod+Shift+8 move container to workspace number 8
-    bindsym $mod+Shift+9 move container to workspace number 9
-    bindsym $mod+Shift+0 move container to workspace number 10
-    # Note: workspaces can have any name you want, not just numbers.
-    # We just use 1-10 as the default.
+# Laptop Built-in Display (eDP-1: Workspaces 11-20, displayed as 1-10)
+workspace 11 output eDP-1 HDMI-A-1
+workspace 12 output eDP-1 HDMI-A-1
+workspace 13 output eDP-1 HDMI-A-1
+workspace 14 output eDP-1 HDMI-A-1
+workspace 15 output eDP-1 HDMI-A-1
+workspace 16 output eDP-1 HDMI-A-1
+workspace 17 output eDP-1 HDMI-A-1
+workspace 18 output eDP-1 HDMI-A-1
+workspace 19 output eDP-1 HDMI-A-1
+workspace 20 output eDP-1 HDMI-A-1
 #
 # Layout stuff:
-# # You can "split" the current object of your focus with
+#
+    # You can "split" the current object of your focus with
     # $mod+b or $mod+v, for horizontal and vertical splits
     # respectively.
     bindsym $mod+b splith
@@ -171,12 +350,17 @@ output * bg "$HOME/Pictures/main-walpaper.*" fill
     # Make the current focus fullscreen
     bindsym $mod+f fullscreen
 
+    # Escape mouse cursor traps / pointer constraints from videos, games, or browsers
+    bindsym $mod+Escape seat * pointer_constraint escape
+
     # Toggle the current focus between tiling and floating mode
     bindsym $mod+Shift+space floating toggle
 
-    # Swap focus between the tiling area and the floating area
-    bindsym $mod+space focus mode_toggle
-    bindsym Print exec grimshot --notify save area
+    # Toggle focus between tiling and floating layer (instantly surfaces buried/hidden floating dialogs)
+    bindsym $mod+grave focus mode_toggle
+    bindsym $mod+Ctrl+space focus mode_toggle
+
+
     # Move focus to the parent container
     bindsym $mod+a focus parent
 #
@@ -191,21 +375,24 @@ output * bg "$HOME/Pictures/main-walpaper.*" fill
     # Show the next scratchpad window or hide the focused scratchpad window.
     # If there are multiple scratchpad windows, this command cycles through them.
     bindsym $mod+minus scratchpad show
+#
+# Resizing containers:
+#
 mode "resize" {
     # left will shrink the containers width
     # right will grow the containers width
     # up will shrink the containers height
     # down will grow the containers height
-    bindsym $left resize shrink width 20px
-    bindsym $down resize grow height 20px
-    bindsym $up resize shrink height 20px
-    bindsym $right resize grow width 20px
+    bindsym $left resize shrink width 10px
+    bindsym $down resize grow height 10px
+    bindsym $up resize shrink height 10px
+    bindsym $right resize grow width 10px
 
     # Ditto, with arrow keys
-    bindsym Left resize shrink width 20px
-    bindsym Down resize grow height 20px
-    bindsym Up resize shrink height 20px
-    bindsym Right resize grow width 20px
+    bindsym Left resize shrink width 10px
+    bindsym Down resize grow height 10px
+    bindsym Up resize shrink height 10px
+    bindsym Right resize grow width 10px
 
     # Return to default mode
     bindsym Return mode "default"
@@ -213,11 +400,74 @@ mode "resize" {
 }
 bindsym $mod+r mode "resize"
 
+# Direct window resizing with Alt+Ctrl+Arrow keys (no mode required)
+bindsym Mod1+Control+Left resize shrink width 20px
+bindsym Mod1+Control+Right resize grow width 20px
+bindsym Mod1+Control+Up resize shrink height 20px
+bindsym Mod1+Control+Down resize grow height 20px
 
-  bar {
-    swaybar_command waybar
-  }
+# Toggle Waybar visibility on and off (Alt+Shift+B)
+bindsym $mod+Shift+b exec killall -SIGUSR1 waybar
 
- 
+# Workspace Overview / Mission Control (Super+Up)
+bindsym Mod4+Up exec pkill -x swayview || swayview
+#
+# Utilities:
+#
+    # Special keys to adjust volume (via SwayOSD with pactl fallback)
+    bindsym --locked XF86AudioRaiseVolume exec swayosd-client --output-volume raise || pactl set-sink-volume \@DEFAULT_SINK@ +5%
+    bindsym --locked XF86AudioLowerVolume exec swayosd-client --output-volume lower || pactl set-sink-volume \@DEFAULT_SINK@ -5%
+    bindsym --locked XF86AudioMute exec swayosd-client --output-volume mute-toggle || pactl set-sink-mute \@DEFAULT_SINK@ toggle
+    bindsym --locked XF86AudioMicMute exec swayosd-client --input-volume mute-toggle || pactl set-source-mute \@DEFAULT_SOURCE@ toggle
+
+    # Special keys to control media via playerctl
+    bindsym --locked XF86AudioPlay exec playerctl play-pause
+    bindsym --locked XF86AudioPause exec playerctl play-pause
+    bindsym --locked XF86AudioPrev exec playerctl previous
+    bindsym --locked XF86AudioNext exec playerctl next
+    bindsym --locked XF86AudioStop exec playerctl stop
+
+    # Special keys to adjust brightness (via SwayOSD with brightnessctl fallback)
+    bindsym --locked XF86MonBrightnessUp exec swayosd-client --brightness raise || brightnessctl set 5%+
+    bindsym --locked XF86MonBrightnessDown exec swayosd-client --brightness lower || brightnessctl set 5%-
+
+    # SwayNC Notification Center toggle (Super+N or Alt+Shift+N)
+    bindsym Mod4+n exec swaync-client -t -sw
+    bindsym $mod+Shift+n exec swaync-client -t -sw
+
+    # macOS-style Screenshot keybindings
+    # Super+Shift+4 or Print: Select area -> copy to clipboard & save to ~/Pictures/Screenshots/
+    bindsym Mod4+Shift+4 exec ~/.local/bin/screenshot area
+    bindsym Print exec ~/.local/bin/screenshot area
+    # Super+Shift+3 or Shift+Print: Fullscreen -> copy to clipboard & save
+    bindsym Mod4+Shift+3 exec ~/.local/bin/screenshot full
+    bindsym Shift+Print exec ~/.local/bin/screenshot full
+    # Super+Shift+5: Area -> open in Swappy markup editor
+    bindsym Mod4+Shift+5 exec ~/.local/bin/screenshot edit
+
+    # Screen Recording toggle
+    # Super+Shift+R: Game audio only
+    bindsym Mod4+Shift+r exec ~/.local/bin/record
+    # Super+Shift+M: Game audio + Microphone
+    bindsym Mod4+Shift+m exec ~/.local/bin/record --mic
+
+
+#
+# Status Bar:
+#
+# Status Bar (Waybar)
+exec_always "pkill -x waybar; waybar"
+
+# SwayOSD on-screen display daemon
+exec_always "pkill -x swayosd-server; swayosd-server"
+
+# SwayNC notification center daemon
+exec_always "pkill -x swaync; swaync"
+
+# Autoload mouse remapping (scroll wheel simulation)
+exec_always input-remapper-control --command autoload
+
+# Ensure laptop internal speakers are unmuted
+exec_always amixer -c 1 sset Speaker unmute 100% 2>/dev/null
+
 include /etc/sway/config.d/*
-exec fcitx5 -d

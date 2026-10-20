@@ -1,0 +1,51 @@
+#!/bin/bash
+# Wallpaper manager for Sway on Wayland
+# Usage:
+#   set-wallpaper /path/to/image.jpg
+#   set-wallpaper https://example.com/wallpaper.png
+
+WALLPAPER_LINK="$HOME/.config/sway/wallpaper"
+WALLPAPERS_DIR="$HOME/Pictures/Wallpapers"
+
+mkdir -p "$WALLPAPERS_DIR"
+
+if [ -z "$1" ]; then
+    echo "Usage: set-wallpaper <path-or-url>"
+    echo "Examples:"
+    echo "  set-wallpaper ~/Pictures/Wallpapers/scenery.jpg"
+    echo "  set-wallpaper https://example.com/wallpaper.jpg"
+    exit 1
+fi
+
+TARGET="$1"
+
+# If an HTTP/HTTPS URL is provided, download it first
+if [[ "$TARGET" =~ ^https?:// ]]; then
+    FILENAME=$(basename "${TARGET%%\?*}")
+    [ -z "$FILENAME" ] && FILENAME="wallpaper_$(date +'%Y%m%d_%H%M%S').jpg"
+    DEST="$WALLPAPERS_DIR/$FILENAME"
+    echo "Downloading wallpaper to $DEST..."
+    if ! curl -sSL -f "$TARGET" -o "$DEST"; then
+        echo "Error: Failed to download wallpaper from $TARGET"
+        exit 1
+    fi
+    IMAGE_PATH="$DEST"
+else
+    IMAGE_PATH="$(realpath "$TARGET" 2>/dev/null)"
+fi
+
+if [ ! -f "$IMAGE_PATH" ]; then
+    echo "Error: File '$IMAGE_PATH' not found."
+    exit 1
+fi
+
+# Update symlink for persistence across restarts
+ln -sf "$IMAGE_PATH" "$WALLPAPER_LINK"
+
+# Apply live across all outputs if Sway is running
+if [ -n "$SWAYSOCK" ]; then
+    swaymsg "output * bg \"$WALLPAPER_LINK\" fill"
+    echo "Wallpaper updated live and saved to $WALLPAPER_LINK"
+else
+    echo "Wallpaper saved to $WALLPAPER_LINK (will apply on next Sway start)"
+fi

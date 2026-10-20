@@ -1,0 +1,51 @@
+#!/usr/bin/env python3
+import sys
+import json
+import subprocess
+
+def main():
+    if len(sys.argv) < 3:
+        print("Usage: sway-workspace <focus|move> <number>")
+        sys.exit(1)
+
+    action = sys.argv[1]
+    try:
+        key_num = int(sys.argv[2])
+    except ValueError:
+        sys.exit(1)
+
+    if key_num == 0:
+        key_num = 10
+
+    # Get active outputs
+    try:
+        outputs = json.loads(subprocess.check_output(['swaymsg', '-t', 'get_outputs']))
+    except Exception as e:
+        sys.exit(1)
+
+    active_outputs = [o for o in outputs if o.get('active')]
+
+    # Find the currently focused output
+    focused_name = None
+    for o in active_outputs:
+        if o.get('focused'):
+            focused_name = o.get('name')
+            break
+
+    # If only 1 display is connected, use 1..10
+    if len(active_outputs) <= 1:
+        target_ws = key_num
+    elif focused_name == 'eDP-1':
+        # Laptop built-in display always uses 11..20 (displayed as 1..10 on Waybar)
+        target_ws = 10 + key_num
+    else:
+        # External monitor (HDMI-A-1) always uses 1..10
+        target_ws = key_num
+
+    if action == "focus":
+        subprocess.run(['swaymsg', f'workspace number {target_ws}'], stdout=subprocess.DEVNULL)
+    elif action == "move":
+        subprocess.run(['swaymsg', f'move container to workspace number {target_ws}'], stdout=subprocess.DEVNULL)
+
+if __name__ == '__main__':
+    main()

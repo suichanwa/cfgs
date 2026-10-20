@@ -1,0 +1,175 @@
+/* SwayNC Minimal Dark & SwayFX Blur Theme */
+
+* {
+  font-family: "JetBrainsMono Nerd Font", "Noto Sans", sans-serif;
+  font-size: 13px;
+  font-weight: 500;
+}
+
+/* Control Center Container */
+.control-center {
+  background: rgba(16, 18, 22, 0.90);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 12px;
+  padding: 16px;
+  color: #cbd5e1;
+}
+
+/* Header Label */
+.widget-label > label {
+  font-size: 15px;
+  font-weight: 700;
+  color: #f8fafc;
+  margin-bottom: 8px;
+}
+
+/* Quick Action Buttons Grid */
+.widget-buttons-grid {
+  margin-bottom: 12px;
+}
+
+.widget-buttons-grid > flowbox > flowboxchild > button {
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 8px;
+  padding: 8px 12px;
+  color: #cbd5e1;
+  transition: all 0.15s ease;
+}
+
+.widget-buttons-grid > flowbox > flowboxchild > button:hover {
+  background: rgba(255, 255, 255, 0.1);
+  color: #ffffff;
+  border-color: rgba(255, 255, 255, 0.15);
+}
+
+.widget-buttons-grid > flowbox > flowboxchild > button:active {
+  background: rgba(255, 255, 255, 0.18);
+  color: #ffffff;
+}
+
+/* Media Player (MPRIS) */
+.widget-mpris {
+  background: rgba(255, 255, 255, 0.035);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 10px;
+  padding: 12px;
+  margin-bottom: 12px;
+}
+
+.widget-mpris-player {
+  padding: 4px;
+}
+
+.widget-mpris-title {
+  font-weight: 700;
+  font-size: 13px;
+  color: #f8fafc;
+}
+
+.widget-mpris-subtitle {
+  font-size: 11.5px;
+  color: #94a3b8;
+}
+
+/* Sliders (Volume & Backlight) */
+.widget-volume,
+.widget-backlight {
+  background: rgba(255, 255, 255, 0.035);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 8px;
+  padding: 8px 12px;
+  margin-bottom: 8px;
+}
+
+.widget-volume > label,
+.widget-backlight > label {
+  color: #e2e8f0;
+  font-size: 14px;
+  margin-right: 8px;
+}
+
+scale trough {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 4px;
+  min-height: 6px;
+}
+
+scale highlight {
+  background: #e2e8f0;
+  border-radius: 4px;
+}
+
+/* Do Not Disturb Toggle */
+.widget-dnd {
+  background: rgba(255, 255, 255, 0.035);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 8px;
+  padding: 8px 12px;
+  margin-bottom: 12px;
+}
+
+.widget-dnd > switch {
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.widget-dnd > switch:checked {
+  background: #ef4444;
+  border-color: #ef4444;
+}
+
+.widget-dnd > switch slider {
+  background: #ffffff;
+  border-radius: 12px;
+}
+
+/* Notification Popup Cards */
+.notification-row {
+  outline: none;
+  margin: 4px 0;
+}
+
+.notification-row .notification-background {
+  background: rgba(16, 18, 22, 0.90);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 10px;
+  padding: 12px;
+  color: #cbd5e1;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+.notification-row .notification-background:hover {
+  border-color: rgba(255, 255, 255, 0.15);
+}
+
+.summary {
+  font-weight: 700;
+  font-size: 13.5px;
+  color: #f8fafc;
+}
+
+.time {
+  font-size: 11px;
+  color: #64748b;
+  margin-right: 4px;
+}
+
+.body {
+  font-size: 12px;
+  color: #cbd5e1;
+  margin-top: 4px;
+}
+
+.close-button {
+  background: transparent;
+  border-radius: 4px;
+  color: #64748b;
+  padding: 2px 6px;
+}
+
+.close-button:hover {
+  background: rgba(239, 68, 68, 0.2);
+  color: #ef4444;
+}

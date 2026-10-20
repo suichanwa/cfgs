@@ -1,0 +1,7 @@
+#!/bin/sh
+pkill -x rofi 2>/dev/null && exit 0
+CACHE="$HOME/.cache/rofi-drun-desktop.cache"
+if [ /usr/share/applications -nt "$CACHE" ] 2>/dev/null || [ "$HOME/.local/share/applications" -nt "$CACHE" ] 2>/dev/null; then
+    rm -f "$CACHE" 2>/dev/null
+fi
+exec rofi -show drun

@@ -1,0 +1,33 @@
+#!/bin/bash
+# Reset Performance Script for Lenovo Yoga Pro 7 14APH8
+
+if [ "$EUID" -ne 0 ]; then
+    echo "[!] Please run with sudo: sudo reset-performance"
+    exit 1
+fi
+
+echo "[+] Restoring balanced platform profile..."
+if [ -f /sys/firmware/acpi/platform_profile ]; then
+    echo balanced > /sys/firmware/acpi/platform_profile
+fi
+if command -v powerprofilesctl >/dev/null 2>&1; then
+    powerprofilesctl set balanced 2>/dev/null || true
+fi
+
+echo "[+] Restoring CPU scaling governors to dynamic..."
+for gov in /sys/devices/system/cpu/cpu*/cpufreq/scaling_governor; do
+    [ -f "$gov" ] && echo powersave > "$gov" 2>/dev/null || echo schedutil > "$gov" 2>/dev/null
+done
+for epp in /sys/devices/system/cpu/cpu*/cpufreq/energy_performance_preference; do
+    [ -f "$epp" ] && echo balance_performance > "$epp"
+done
+if [ -f /sys/devices/system/cpu/cpufreq/boost ]; then
+    echo 1 > /sys/devices/system/cpu/cpufreq/boost
+fi
+
+echo "[+] Restoring AMD GPU dynamic clock scaling (auto)..."
+for dpm in /sys/class/drm/card*/device/power_dpm_force_performance_level; do
+    [ -f "$dpm" ] && echo auto > "$dpm"
+done
+
+echo "[✔] Performance restored to balanced."

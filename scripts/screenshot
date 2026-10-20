@@ -1,0 +1,29 @@
+#!/bin/bash
+# macOS-style screenshot utility for Sway / Wayland
+
+DIR="$HOME/Pictures/Screenshots"
+mkdir -p "$DIR"
+FILE="$DIR/Screenshot_$(date +'%Y-%m-%d_%H-%M-%S').png"
+
+case "$1" in
+    area)
+        # Select area -> Copy to clipboard & save file
+        GEOM=$(slurp)
+        [ -z "$GEOM" ] && exit 0
+        grim -g "$GEOM" - | tee "$FILE" | wl-copy --type image/png
+        ;;
+    full)
+        # Full screen -> Copy to clipboard & save file
+        grim - | tee "$FILE" | wl-copy --type image/png
+        ;;
+    edit)
+        # Select area -> Open in Swappy annotation editor
+        GEOM=$(slurp)
+        [ -z "$GEOM" ] && exit 0
+        grim -g "$GEOM" - | swappy -f -
+        ;;
+    *)
+        echo "Usage: $0 {area|full|edit}"
+        exit 1
+        ;;
+esac
