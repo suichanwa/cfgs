@@ -19,7 +19,7 @@
             "custom/gpu",
             "memory",
             "memory#swap",
-            "disk"
+            "custom/disk"
         ]
     },
     "group/audio": {
@@ -74,11 +74,11 @@
         "interval": 2,
         "on-click": "foot -e btop"
     },
-    "disk": {
+    "custom/disk": {
+        "exec": "~/.local/bin/waybar-disk-status",
+        "return-type": "json",
         "interval": 30,
-        "format": "<span color='#2dd4bf'>󰋊</span> <span color='#dbe8ed'>{free}</span>",
-        "path": "/",
-        "tooltip-format": "Free: {free} ({percentage_free}%)\nUsed: {used} / Total: {total}",
+        "format": "<span color='#2dd4bf'>󰋊</span> <span color='#dbe8ed'>{}</span>",
         "on-click": "foot -e btop"
     },
     "pulseaudio": {

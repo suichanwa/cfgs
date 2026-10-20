@@ -1,0 +1,15 @@
+#!/bin/sh
+# Fast dual-disk status generator for Waybar
+df -h / /mnt/windows 2>/dev/null | awk '
+NR==2 { root_size=$2; root_used=$3; root_avail=$4; root_p=$5 }
+NR==3 { win_size=$2; win_used=$3; win_avail=$4; win_p=$5 }
+END {
+    tt = "<b>󰋊 Linux (/)</b>\\n  Free: <b>" root_avail "</b>\\n  Used: " root_used " / " root_size " (" root_p ")"
+    if (win_size != "") {
+        tt = tt "\\n\\n<b>󰍲 Windows (/mnt/windows)</b>\\n  Free: <b>" win_avail "</b>\\n  Used: " win_used " / " win_size " (" win_p ")"
+    } else {
+        tt = tt "\\n\\n<b>󰍲 Windows (/mnt/windows)</b>\\n  <i>Not mounted</i>"
+    }
+    printf "{\"text\":\"%s\",\"tooltip\":\"%s\"}\n", root_avail, tt
+}
+'
