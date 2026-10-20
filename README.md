@@ -17,16 +17,20 @@ Personal configuration dotfiles.
 
 ---
 
-### Legacy Install Scripts
+### Installation on Arch Linux
+
+Clone the repository and run the automated installer:
+
 ```bash
-sudo apt install git -y
-sudo dnf in git -y
-
-git clone https://github.com/suichanwa/cfgs
-sudo chmod 555 debDistroConfigureScript.sh
-sudo chmod 555 rpmDistroConfigureScript.sh
-
-./debDistroConfigureScript.sh
-# or
-./rpmDistroConfigureScript.sh
+git clone https://github.com/suichanwa/cfgs.git
+cd cfgs
+chmod +x install.sh
+./install.sh
 ```
+
+The script will:
+1. Install all necessary official packages (`swayfx`, `waybar`, `rofi`, `foot`, `yazi`, `pamixer`, fonts, icons, etc.) via `pacman`.
+2. Check for an AUR helper (`yay`/`paru`) to optionally install SwayNC and SwayOSD.
+3. Automatically back up your existing configurations into `~/.config_backup_<timestamp>`.
+4. Deploy the configuration files and helper scripts with proper permissions.
+5. Apply system dark theme defaults.
