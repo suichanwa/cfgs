@@ -1,62 +1,38 @@
 #!/bin/bash
-# Extreme Max Performance Script for Lenovo Yoga Pro 7 14APH8 (Ryzen 7 7840HS + Radeon 780M)
+# Safe Max Performance Script for Lenovo IdeaPad Pro 5 (Ryzen 7 7840HS + Radeon 780M)
 
 if [ "$EUID" -ne 0 ]; then
     echo "[!] Please run with sudo: sudo ~/.local/bin/max-performance"
     exit 1
 fi
 
-echo "[+] Setting ACPI Platform Profile to Extreme Performance..."
-if [ -f /sys/firmware/acpi/platform_profile ]; then
-    echo performance > /sys/firmware/acpi/platform_profile
-fi
+echo "[+] Setting ACPI Platform Profile to Performance..."
 if command -v powerprofilesctl >/dev/null 2>&1; then
     powerprofilesctl set performance 2>/dev/null || true
 fi
+if [ -f /sys/firmware/acpi/platform_profile ]; then
+    echo performance > /sys/firmware/acpi/platform_profile
+fi
 
-echo "[+] Setting CPU scaling governors & EPP to performance on all cores..."
-for gov in /sys/devices/system/cpu/cpu*/cpufreq/scaling_governor; do
-    [ -f "$gov" ] && echo performance > "$gov"
-done
+echo "[+] Setting AMD P-State EPP and CPU scaling to performance..."
 for epp in /sys/devices/system/cpu/cpu*/cpufreq/energy_performance_preference; do
     [ -f "$epp" ] && echo performance > "$epp"
+done
+for gov in /sys/devices/system/cpu/cpu*/cpufreq/scaling_governor; do
+    [ -f "$gov" ] && echo performance > "$gov"
 done
 if [ -f /sys/devices/system/cpu/cpufreq/boost ]; then
     echo 1 > /sys/devices/system/cpu/cpufreq/boost
 fi
 
-echo "[+] Locking AMD Radeon 780M GPU to highest performance level..."
+echo "[+] Setting GPU power profile to dynamic auto..."
 for dpm in /sys/class/drm/card*/device/power_dpm_force_performance_level; do
-    [ -f "$dpm" ] && echo high > "$dpm"
+    [ -f "$dpm" ] && echo auto > "$dpm"
 done
 
-echo "[+] Setting PCIe ASPM to performance mode..."
+echo "[+] Setting PCIe ASPM to performance..."
 if [ -f /sys/module/pcie_aspm/parameters/policy ]; then
     echo performance > /sys/module/pcie_aspm/parameters/policy 2>/dev/null || true
-fi
-
-echo "[+] Setting Ryzen 7 7840HS to 45W Performance Preset (85°C thermal limit, 42W sustained / 45W max peak)..."
-RYZENADJ="/home/suiseika/.local/bin/ryzenadj"
-if [ -x "$RYZENADJ" ]; then
-    "$RYZENADJ" \
-        --stapm-limit=42000 \
-        --slow-limit=45000 \
-        --fast-limit=45000 \
-        --slow-time=64 \
-        --stapm-time=600 \
-        --tctl-temp=85 \
-        --apu-skin-temp=85 \
-        --vrm-current=90000 \
-        --vrmmax-current=110000 \
-        --vrmsoc-current=35000 \
-        --vrmsocmax-current=45000 \
-        --vrmgfx-current=55000 \
-        --vrmgfxmax_current=65000 \
-        --max-fclk-frequency=2000 \
-        --max-gfxclk=2800 \
-        --set-coall=0xFFFFFFEC \
-        --set-cogfx=0xFFFFFFEC \
-        --max-performance 2>&1 | grep -v "no compatible ryzen_smu" || true
 fi
 
 echo "[+] Setting Transparent Hugepages & low swappiness..."
@@ -65,4 +41,4 @@ if [ -f /sys/kernel/mm/transparent_hugepage/enabled ]; then
 fi
 sysctl -w vm.swappiness=10 >/dev/null 2>&1 || true
 
-echo "[✔] Performance preset active! Capped at 45W max (42W sustained) with 85°C thermal ceiling."
+echo "[✔] Performance mode active safely via official ACPI platform profile!"
