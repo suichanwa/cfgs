@@ -35,23 +35,23 @@ if [ -f /sys/module/pcie_aspm/parameters/policy ]; then
     echo performance > /sys/module/pcie_aspm/parameters/policy 2>/dev/null || true
 fi
 
-echo "[+] Setting Ryzen 7 7840HS to 50W Performance Preset (88°C thermal limit, 45W-48W sustained / 50W max burst)..."
+echo "[+] Setting Ryzen 7 7840HS to 45W Performance Preset (85°C thermal limit, 42W sustained / 45W max peak)..."
 RYZENADJ="/home/suiseika/.local/bin/ryzenadj"
 if [ -x "$RYZENADJ" ]; then
     "$RYZENADJ" \
-        --stapm-limit=45000 \
-        --slow-limit=48000 \
-        --fast-limit=50000 \
+        --stapm-limit=42000 \
+        --slow-limit=45000 \
+        --fast-limit=45000 \
         --slow-time=64 \
         --stapm-time=600 \
-        --tctl-temp=88 \
-        --apu-skin-temp=88 \
-        --vrm-current=100000 \
-        --vrmmax-current=125000 \
-        --vrmsoc-current=40000 \
-        --vrmsocmax-current=55000 \
-        --vrmgfx-current=60000 \
-        --vrmgfxmax_current=75000 \
+        --tctl-temp=85 \
+        --apu-skin-temp=85 \
+        --vrm-current=90000 \
+        --vrmmax-current=110000 \
+        --vrmsoc-current=35000 \
+        --vrmsocmax-current=45000 \
+        --vrmgfx-current=55000 \
+        --vrmgfxmax_current=65000 \
         --max-fclk-frequency=2000 \
         --max-gfxclk=2800 \
         --set-coall=0xFFFFFFEC \
@@ -65,4 +65,4 @@ if [ -f /sys/kernel/mm/transparent_hugepage/enabled ]; then
 fi
 sysctl -w vm.swappiness=10 >/dev/null 2>&1 || true
 
-echo "[✔] Performance preset active! Capped at 50W max (45W/48W sustained) with 88°C thermal ceiling."
+echo "[✔] Performance preset active! Capped at 45W max (42W sustained) with 85°C thermal ceiling."
