@@ -111,6 +111,7 @@ window#waybar {
 
 /* Inner modules inside capsules */
 #cpu,
+#custom-cpu,
 #custom-gpu,
 #memory,
 #disk,
@@ -129,6 +130,7 @@ window#waybar {
 }
 
 #cpu:hover,
+#custom-cpu:hover,
 #custom-gpu:hover,
 #memory:hover,
 #disk:hover,

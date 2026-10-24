@@ -15,7 +15,7 @@
     "group/hardware": {
         "orientation": "horizontal",
         "modules": [
-            "cpu",
+            "custom/cpu",
             "custom/gpu",
             "memory",
             "memory#swap",
@@ -50,11 +50,11 @@
         "format": "<span color='#f59e0b'>󰩨</span> <span color='#fef08a'>{}</span>",
         "tooltip": false
     },
-    "cpu": {
-        "format": "<span color='#67e8f9'></span> <span color='#dbe8ed'>{usage:2}%</span>",
-        "interval": 2,
-        "on-click": "foot -e btop",
-        "tooltip": false
+    "custom/cpu": {
+        "exec": "~/.local/bin/waybar-cpu-status",
+        "return-type": "json",
+        "format": "<span color='#67e8f9'></span> <span color='#dbe8ed'>{}</span>",
+        "on-click": "foot -e btop"
     },
     "custom/gpu": {
         "exec": "cat /sys/class/drm/card1/device/gpu_busy_percent 2>/dev/null || echo 0",
