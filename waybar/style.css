@@ -174,3 +174,21 @@ window#waybar {
 #tray > .needs-attention {
     -gtk-icon-effect: highlight;
 }
+
+/* =========================================================================
+   Hover Tooltips (Larger, more readable text popups)
+   ========================================================================= */
+tooltip {
+    background-color: rgba(16, 18, 22, 0.94);
+    border: 1px solid rgba(255, 255, 255, 0.14);
+    border-radius: 8px;
+    padding: 6px 10px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+}
+
+tooltip label {
+    font-size: 15px;
+    font-weight: 500;
+    color: #e2e8f0;
+}
+
